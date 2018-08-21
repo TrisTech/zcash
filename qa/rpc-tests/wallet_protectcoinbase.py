@@ -82,20 +82,8 @@ class WalletProtectCoinbaseTest (BitcoinTestFramework):
         self.nodes[3].importaddress(mytaddr)
         recipients= [{"address":myzaddr, "amount": Decimal('1')}]
         myopid = self.nodes[3].z_sendmany(mytaddr, recipients)
-        errorString=""
-        status = None
-        opids = [myopid]
-        timeout = 10
-        for x in xrange(1, timeout):
-            results = self.nodes[3].z_getoperationresult(opids)
-            if len(results)==0:
-                time.sleep(1)
-            else:
-                status = results[0]["status"]
-                errorString = results[0]["error"]["message"]
-                break
-        assert_equal("failed", status)
-        assert_equal("no UTXOs found for taddr from address" in errorString, True)
+
+        wait_and_assert_operationid_status(self.nodes[3], myopid, "failed", "no UTXOs found for taddr from address")
 
         # This send will fail because our wallet does not allow any change when protecting a coinbase utxo,
         # as it's currently not possible to specify a change address in z_sendmany.
