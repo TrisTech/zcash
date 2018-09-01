@@ -26,6 +26,7 @@
 #include <boost/optional.hpp>
 
 #include "prevector.h"
+#include "script/script.h"
 
 static const unsigned int MAX_SIZE = 0x02000000;
 
@@ -110,6 +111,11 @@ template<typename Stream> inline void ser_writedata32(Stream &s, uint32_t obj)
     obj = htole32(obj);
     s.write((char*)&obj, 4);
 }
+template<typename Stream> inline void ser_writedata32be(Stream &s, uint32_t obj)
+{
+    obj = htobe32(obj);
+    s.write((char*)&obj, 4);
+}
 template<typename Stream> inline void ser_writedata64(Stream &s, uint64_t obj)
 {
     obj = htole64(obj);
@@ -132,6 +138,12 @@ template<typename Stream> inline uint32_t ser_readdata32(Stream &s)
     uint32_t obj;
     s.read((char*)&obj, 4);
     return le32toh(obj);
+}
+template<typename Stream> inline uint32_t ser_readdata32be(Stream &s)
+{
+    uint32_t obj;
+    s.read((char*)&obj, 4);
+    return be32toh(obj);
 }
 template<typename Stream> inline uint64_t ser_readdata64(Stream &s)
 {
@@ -512,6 +524,12 @@ template<typename Stream, unsigned int N, typename T, typename V> void Unseriali
 template<typename Stream, unsigned int N, typename T> inline void Unserialize(Stream& is, prevector<N, T>& v);
 
 /**
+ * CScript
+ */
+template<typename Stream> void Serialize(Stream& os, const CScript& v);
+template<typename Stream> void Unserialize(Stream& is, CScript& v);
+
+/**
  * vector
  * vectors of unsigned char are a special case and are intended to be serialized as a single opaque blob.
  */
@@ -747,7 +765,21 @@ inline void Unserialize(Stream& is, std::vector<T, A>& v)
     Unserialize_impl(is, v, T());
 }
 
+/**
+ * CScript
+ */
+template<typename Stream>
+void Serialize(Stream& os, const CScript& v)
+{
+    //    Serialize(os, (const prevector<28, unsigned char>&)v);
+    Serialize(os, (const CScriptBase&)v);
+}
 
+template<typename Stream>
+void Unserialize(Stream& is, CScript& v)
+{
+    Unserialize(is, (CScriptBase&)v);
+}
 
 /**
  * optional
