@@ -21,6 +21,7 @@
 #include "metrics.h"
 #include "net.h"
 #include "pow.h"
+#include "pubkey.h"
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
@@ -2323,7 +2324,15 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
                     addressUnspentIndex.push_back(make_pair(CAddressUnspentKey(2, uint160(hashBytes), hash, k), CAddressUnspentValue()));
 
                 } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
-                    vector<unsigned char> hashBytes(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
+                    vector<unsigned char> hashBytes;
+                    if (out.scriptPubKey.size() == 23) {
+                        hashBytes = vector <unsigned char>(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
+                    } else {
+                        vector<unsigned char> pubkeyBytes(out.scriptPubKey.begin()+1, out.scriptPubKey.begin()+34);
+                        CPubKey pubkey(pubkeyBytes);
+                        CKeyID pubkeyHash = pubkey.GetID();
+                        hashBytes = vector <unsigned char>(pubkeyHash.begin(), pubkeyHash.end());
+                    }
 
                     // undo receiving activity
                     addressIndex.push_back(make_pair(CAddressIndexKey(1, uint160(hashBytes), pindex->nHeight, i, hash, k, false), out.nValue));
@@ -2392,7 +2401,15 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
 
 
                     } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
-                        vector<unsigned char> hashBytes(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23);
+                        vector<unsigned char> hashBytes;
+                        if (prevout.scriptPubKey.size() == 23) {
+                            hashBytes = vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23);
+                        } else {
+                            vector<unsigned char> pubkeyBytes(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.begin()+34);
+                            CPubKey pubkey(pubkeyBytes);
+                            CKeyID pubkeyHash = pubkey.GetID();
+                            hashBytes = vector <unsigned char>(pubkeyHash.begin(), pubkeyHash.end());
+                        }
 
                         // undo spending activity
                         addressIndex.push_back(make_pair(CAddressIndexKey(1, uint160(hashBytes), pindex->nHeight, i, hash, j, true), prevout.nValue * -1));
@@ -2673,7 +2690,14 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                         hashBytes = uint160(vector <unsigned char>(prevout.scriptPubKey.begin()+2, prevout.scriptPubKey.begin()+22));
                         addressType = 2;
                     } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
-                        hashBytes = uint160(vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23));
+                        if (prevout.scriptPubKey.size() == 23) {
+                            hashBytes = uint160(vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23));
+                        } else {
+                            vector<unsigned char> pubkeyBytes(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.begin()+34);
+                            CPubKey pubkey(pubkeyBytes);
+                            CKeyID pubkeyHash = pubkey.GetID();
+                            hashBytes = uint160(vector <unsigned char>(pubkeyHash.begin(), pubkeyHash.end()));
+                        }
                         addressType = 1;
                     } else {
                         hashBytes.SetNull();
@@ -2733,7 +2757,15 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                     addressUnspentIndex.push_back(make_pair(CAddressUnspentKey(2, uint160(hashBytes), txhash, k), CAddressUnspentValue(out.nValue, out.scriptPubKey, pindex->nHeight)));
 
                 } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
-                    vector<unsigned char> hashBytes(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
+                    vector<unsigned char> hashBytes;
+                    if (out.scriptPubKey.size() == 23) {
+                        hashBytes = vector <unsigned char>(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
+                    } else {
+                        vector<unsigned char> pubkeyBytes(out.scriptPubKey.begin()+1, out.scriptPubKey.begin()+34);
+                        CPubKey pubkey(pubkeyBytes);
+                        CKeyID pubkeyHash = pubkey.GetID();
+                        hashBytes = vector <unsigned char>(pubkeyHash.begin(), pubkeyHash.end());
+                    }
 
                     // record receiving activity
                     addressIndex.push_back(make_pair(CAddressIndexKey(1, uint160(hashBytes), pindex->nHeight, i, txhash, k, false), out.nValue));
