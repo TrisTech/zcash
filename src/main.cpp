@@ -2325,7 +2325,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
 
                 } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
                     vector<unsigned char> hashBytes;
-                    if (out.scriptPubKey.size() == 23) {
+                    if (out.scriptPubKey.size() == 25) {
                         hashBytes = vector <unsigned char>(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
                     } else {
                         vector<unsigned char> pubkeyBytes(out.scriptPubKey.begin()+1, out.scriptPubKey.begin()+34);
@@ -2402,7 +2402,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
 
                     } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
                         vector<unsigned char> hashBytes;
-                        if (prevout.scriptPubKey.size() == 23) {
+                        if (prevout.scriptPubKey.size() == 25) {
                             hashBytes = vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23);
                         } else {
                             vector<unsigned char> pubkeyBytes(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.begin()+34);
@@ -2690,7 +2690,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                         hashBytes = uint160(vector <unsigned char>(prevout.scriptPubKey.begin()+2, prevout.scriptPubKey.begin()+22));
                         addressType = 2;
                     } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
-                        if (prevout.scriptPubKey.size() == 23) {
+                        if (prevout.scriptPubKey.size() == 25) {
                             hashBytes = uint160(vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23));
                         } else {
                             vector<unsigned char> pubkeyBytes(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.begin()+34);
@@ -2758,7 +2758,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
                 } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
                     vector<unsigned char> hashBytes;
-                    if (out.scriptPubKey.size() == 23) {
+                    if (out.scriptPubKey.size() == 25) {
                         hashBytes = vector <unsigned char>(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
                     } else {
                         vector<unsigned char> pubkeyBytes(out.scriptPubKey.begin()+1, out.scriptPubKey.begin()+34);
