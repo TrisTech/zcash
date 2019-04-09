@@ -2458,17 +2458,12 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
     // move best block pointer to prevout block
     view.SetBestBlock(pindex->pprev->GetBlockHash());
 
-    if (pfClean) {
-        *pfClean = fClean;
-        return true;
-    }
-
     if (fAddressIndex) {
         if (!pblocktree->EraseAddressIndex(addressIndex)) {
-            return AbortNode(state, "Failed to delete address index");
+            return AbortNode("Failed to delete address index");
         }
         if (!pblocktree->UpdateAddressUnspentIndex(addressUnspentIndex)) {
-            return AbortNode(state, "Failed to write address unspent index");
+            return AbortNode("Failed to write address unspent index");
         }
     }
 
