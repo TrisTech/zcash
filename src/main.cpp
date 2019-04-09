@@ -2460,10 +2460,12 @@ DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex,
 
     if (fAddressIndex) {
         if (!pblocktree->EraseAddressIndex(addressIndex)) {
-            return AbortNode("Failed to delete address index");
+            error("DisconnectBlock(): Failed to delete address index");
+            return DISCONNECT_FAILED;
         }
         if (!pblocktree->UpdateAddressUnspentIndex(addressUnspentIndex)) {
-            return AbortNode("Failed to write address unspent index");
+            error("DisconnectBlock(): Failed to write address unspent index");
+            return DISCONNECT_FAILED;
         }
     }
 
