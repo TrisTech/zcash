@@ -172,8 +172,6 @@ BITCOIN_CORE_H = \
   net.h \
   netbase.h \
   noui.h \
-  paymentdisclosure.h \
-  paymentdisclosuredb.h \
   policy/fees.h \
   pow.h \
   prevector.h \
@@ -216,6 +214,7 @@ BITCOIN_CORE_H = \
   util.h \
   utilmoneystr.h \
   utilstrencodings.h \
+  utiltest.h \
   utiltime.h \
   validationinterface.h \
   version.h \
@@ -224,6 +223,8 @@ BITCOIN_CORE_H = \
   wallet/asyncrpcoperation_shieldcoinbase.h \
   wallet/crypter.h \
   wallet/db.h \
+  wallet/paymentdisclosure.h \
+  wallet/paymentdisclosuredb.h \
   wallet/rpcwallet.h \
   wallet/wallet.h \
   wallet/wallet_ismine.h \
@@ -264,8 +265,6 @@ libbitcoin_server_a_SOURCES = \
   miner.cpp \
   net.cpp \
   noui.cpp \
-  paymentdisclosure.cpp \
-  paymentdisclosuredb.cpp \
   policy/fees.cpp \
   pow.cpp \
   rest.cpp \
@@ -306,8 +305,6 @@ endif
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
-  utiltest.cpp \
-  utiltest.h \
   zcbenchmarks.cpp \
   zcbenchmarks.h \
   wallet/asyncrpcoperation_mergetoaddress.cpp \
@@ -315,8 +312,8 @@ libbitcoin_wallet_a_SOURCES = \
   wallet/asyncrpcoperation_shieldcoinbase.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
-  paymentdisclosure.cpp \
-  paymentdisclosuredb.cpp \
+  wallet/paymentdisclosure.cpp \
+  wallet/paymentdisclosuredb.cpp \
   wallet/rpcdisclosure.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
@@ -389,6 +386,7 @@ libbitcoin_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   transaction_builder.cpp \
+  utiltest.cpp \
   $(BITCOIN_CORE_H) \
   $(LIBZCASH_H)
 
